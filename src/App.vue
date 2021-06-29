@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
-    <button v-if="isMain" class="main-btn" @click="isMain = false">
-      Налоговый вычет
-    </button>
+  <div id="app" >
+    <div v-if="isMain" class="btn-wrapper">
+      <button class="main-btn" @click="isMain = false">Налоговый вычет</button>
+    </div>
     <Card v-else @close="isMain = true" />
   </div>
 </template>
@@ -42,18 +42,24 @@ body {
   box-shadow: 0px -0.11px 16.9495px rgba(183, 187, 225, 0.33);
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Lab Grotesque", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #000000;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  min-height: 100%;
+  position: relative;
+}
+.btn-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .main-btn {
@@ -68,8 +74,7 @@ body {
   box-shadow: (0px 0px 44px #cfdae7);
   border-radius: 6px;
   cursor: pointer;
-} 
-
+}
 
 .main-btn:hover,
 .main-btn:active {

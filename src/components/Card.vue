@@ -1,40 +1,40 @@
 <template>
-  <transition name="modal">
-    <div class="card__wrapper">
-      <div class="card">
-        <button class="close__btn" @click="$emit('close')"></button>
-        <h2 class="card__title">Налоговый вычет</h2>
-        <p class="card__desc">
-          Используйте налоговый вычет чтобы погасить ипотеку досрочно. Размер
-          налогового вычета составляет не более 13% от своего официального
-          годового дохода.
-        </p>
-        <Form @pay="onPayments" />
-        <form id="form" @submit.prevent="sendForm">
-          <div v-if="pays.length" class="card__list">
-            <p class="card__notification">Итого можете внести в качестве досрочных:</p>
-            <div v-for="(pay, index) in pays" :key="index" class="card__item">
-              <input
-                type="checkbox"
-                name="checkbox"
-                class="checkbox"
-                :id="index"
-                checked
-              />
-              <label :for="index" class="label">
-                {{ format(pay) }} рублей
-                <span> в {{ index + 1 }} год </span>
-              </label>
-            </div>
+  <div class="card__wrapper">
+    <div class="card">
+      <button class="close__btn" @click="$emit('close')"></button>
+      <h2 class="card__title">Налоговый вычет</h2>
+      <p class="card__desc">
+        Используйте налоговый вычет чтобы погасить ипотеку досрочно. Размер
+        налогового вычета составляет не более 13% от своего официального
+        годового дохода.
+      </p>
+      <Form @pay="onPayments" />
+      <form id="form" @submit.prevent="sendForm">
+        <div v-if="pays.length" class="card__list">
+          <p class="card__notification">
+            Итого можете внести в качестве досрочных:
+          </p>
+          <div v-for="(pay, index) in pays" :key="index" class="card__item">
+            <input
+              type="checkbox"
+              name="checkbox"
+              class="checkbox"
+              :id="index"
+              checked
+            />
+            <label :for="index" class="label">
+              {{ format(pay) }} рублей
+              <span class="year__pay">
+                в {{ index + 1 + declOfNum(index + 1) }} год
+              </span>
+            </label>
           </div>
-          <RadioButtons />
-          <button type="submit" class="add__btn">
-            Добавить
-          </button>
-        </form>
-      </div>
+        </div>
+        <RadioButtons />
+        <button type="submit" class="add__btn">Добавить</button>
+      </form>
     </div>
-  </transition>
+  </div>
 </template>
 <script>
 import Form from "./Form.vue";
@@ -47,14 +47,14 @@ export default {
     return {
       pays: "",
       alert: false,
+      titles: ["-ый", "-ой", "-ий"],
     };
   },
-
   methods: {
     onPayments(data) {
       this.pays = data.payments;
     },
-    format: function(num) {
+    format: function (num) {
       return num
         .toString()
         .split(/(?=(?:\d{3})+(?:\.|$))/g)
@@ -63,27 +63,31 @@ export default {
     sendForm() {
       console.log(this.checked);
     },
+    declOfNum: function (num) {
+      const value = Math.abs(num) % 100;
+      let numb = value % 10;
+      if (value == 3) return this.titles[2];
+      if (numb == 2 || (numb >= 6 && numb <= 9)) return this.titles[1];
+      if (numb == 1) return this.titles[0];
+      return this.titles[0];
+    },
   },
 };
 </script>
 <style>
-
 .card__item {
-  padding-bottom: 16px;
-  margin-bottom: 16px;
   border-bottom: 1px solid #dfe3e6;
 }
 
 .card__notification {
   font-weight: bold;
-font-size: 14px;
-line-height: 24px;
-margin: 16px 0;
+  font-size: 14px;
+  line-height: 24px;
+  margin: 16px 0;
 }
 
 .card__wrapper {
   width: 100%;
-  height: 100%;
   background: #f1f1f1;
 }
 button {
@@ -102,9 +106,8 @@ button {
   position: relative;
   min-height: 100%;
 }
-
 .card__title {
-  font-weight: 500;
+  font-weight: bold;
   font-size: 28px;
   line-height: 40px;
   margin-bottom: 16px;
@@ -157,6 +160,7 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 5% 0;
   }
 
   .card {
@@ -164,6 +168,7 @@ button {
     max-width: 552px;
     padding: 32px;
     min-height: auto;
+    margin: auto;
   }
 
   .card__title {
@@ -217,6 +222,7 @@ button {
   align-items: center;
   user-select: none;
   position: relative;
+  padding: 16px 0;
 }
 .checkbox + .label::before {
   content: "";
@@ -257,5 +263,9 @@ button {
 /* стили для чекбокса, находящегося в состоянии disabled */
 .checkbox:disabled + .label::before {
   background-image: url("../assets/mdi_disabled.svg");
+}
+
+.year__pay {
+  opacity: 0.7;
 }
 </style>

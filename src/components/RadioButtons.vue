@@ -23,6 +23,7 @@ export default {
 .reduce__wrapper {
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
   margin-bottom: 40%;
 }
 
