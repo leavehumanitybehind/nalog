@@ -88,6 +88,7 @@ export default {
   padding: 10px;
   border: 1px solid #bec5cc;
   outline: none;
+  font-size: 16px;
 }
 
 .card__form input::placeholder {
